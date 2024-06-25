@@ -2,7 +2,14 @@
 sequenceDiagram
     participant browser
     participant server
+    Note right of browser: The user clicks on the button and the HTTP POST request is started
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    server-->>browser: Document/Redirect
+    deactivate server
 
+    Note right of browser: This is the result of the URL redirect that reloads the Notes page
+ 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
     server-->>browser: HTML document
@@ -22,7 +29,7 @@ sequenceDiagram
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
-    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+    server-->>browser: [{ "content": "Here should be the Json with new note", "date": "2024-25-6" }, ... ]
     deactivate server
 
     Note right of browser: The browser executes the callback function that renders the notes
