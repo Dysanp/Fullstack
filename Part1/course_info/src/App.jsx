@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+const App = () => {  
+  const course = 'Half Stack application development'
+  const parts = [
+    {
+      name: 'Fundamentals of React',
+      exercises: 10
+    },
+    {
+      name: 'Using props to pass data',
+      exercises: 7
+    },
+    {
+      name: 'State of a component',
+      exercises: 14
+    }
+  ]
 
-function App() {
-  const [count, setCount] = useState(0)
+  /* create the Header component that receives as prompt the course */
+  const Header = (props) => {    
+    return(
+      <div>
+        <h1>
+          {props.course}
+        </h1>
+      </div>
+    )
+  }
+
+  /* Create the Part component */
+  const Part = (props) => {
+    /*console.log('part is called')*/
+    return(
+      <div>
+        {props.part.name} {props.part.exercises}
+      </div>
+    )
+  }
+
+  /*Create the Content component */
+  const Component = (props) => {
+    return (
+      <div>
+        {props.parts.map(part => <Part part={part} />)}
+      </div>
+    )
+  }
+  
+  /*Create the Total component */
+  const Total = (props) => {
+    /* console.log('Total was used')*/
+    const exercises = props.parts.map(value => value.exercises)
+    let sum = 0
+    exercises.forEach(num =>{
+      sum += num
+    })
+    return(
+      <div>
+        <p>
+          Number of exercises {sum}
+        </p>        
+      </div>
+    )
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <Header course={course} />
+      <Component parts={parts} />
+      <Total parts={parts}/>
+    </div>
   )
 }
-
 export default App
