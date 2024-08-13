@@ -1,11 +1,6 @@
-import { useState } from 'react'
-const Display = ({counter}) => <div>{counter}</div>
 
-const Button = ({ handleClick, text }) => (
-  <button onClick={handleClick}>
-    {text}
-  </button>
-)
+
+import { useState } from 'react'
 const History = (props) => {
   if (props.allClicks.length === 0) {
     return (
@@ -14,12 +9,19 @@ const History = (props) => {
       </div>
     )
   }
+
   return (
     <div>
       button press history: {props.allClicks.join(' ')}
     </div>
   )
 }
+
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
 
 const App = () => {
   const [left, setLeft] = useState(0)
