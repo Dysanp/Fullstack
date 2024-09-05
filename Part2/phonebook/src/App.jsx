@@ -5,12 +5,7 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '040-1234567',
-      id: '1'
-     }
-  ]) 
+  const [persons, setPersons] = useState([]) 
 
   const hook = () => {
     axios
