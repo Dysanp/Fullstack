@@ -3,6 +3,9 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
 import personsService from './services/persons'
+import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
+
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -19,7 +22,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [useFilter, setUseFilter] = useState(false)
-
+  const [messa, setMessa] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+  
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -44,17 +49,35 @@ const App = () => {
       number: newNumber
     }
     if (!persons.some(person => person.name === p2a.name)) {            
-      personsService.create(p2a).then(returnedPerson => setPersons(persons.concat(returnedPerson)))            
+      personsService.create(p2a).then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setMessa(`Added ${p2a.name}`)
+        setTimeout(() => {
+          setMessa(null)
+        },3000)
+      })            
     }
     else {
       const p2up = persons.find(person => person.name === p2a.name)
       const pupd = {...p2up, number: p2a.number}      
       if (window.confirm(`${pupd.name} is already added to phonebook, replace the old number with a new one?`)){
-        
-        personsService.update(p2up.id,pupd).then(returnedPerson => {          
+        personsService
+        .update(p2up.id,pupd)
+        .then(returnedPerson => {          
           setPersons(persons.map(person => person.id === pupd.id ? returnedPerson : person))          
         })
-                  
+        .catch(error => {
+          console.log(error)
+          setErrorMessage(`Information from ${p2up.name} has been already deleted from server`)
+          personsService
+          .getAll()
+          .then(initialPersons => {
+            setPersons(initialPersons)
+          })
+          setTimeout(()=>{
+            setErrorMessage(null)
+          },3000)
+        })                  
       }      
     }
     setNewName('')
@@ -73,7 +96,9 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2>Phonebook</h2>      
+      <Notification message={messa}/>
+      <ErrorNotification errorMessage = {errorMessage}/>
       <Filter filter={newFilter} handleFilter={handleFilterChange}/>
       <h3>Add a new</h3>
       <PersonForm newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} addPerson={addPerson}/>      
